@@ -1,0 +1,13 @@
+{
+    "env":  {
+        "MONGO_ALTLAS_PW":"llMoiftzhXafe3HQ",
+        "JWT_KEY":"bababba",
+        "URL":"mongodb+srv://rest-api:",
+        "DB_NAME":"myFirstDatabase",
+        "USER_NAME":"rest-api",
+        "client_url":"http://localhost:2000",
+        "reset_pass_key":"i am done :(",
+        "MAILGUN_KEY":"cca2a6eb48ddfb871255b82219e60bb7-a09d6718-4b3a9584"
+
+    }
+}
