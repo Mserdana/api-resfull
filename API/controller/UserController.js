@@ -57,7 +57,7 @@ exports.signIn= (req,res,next)=>{
                                  if(err){
                                      return res.status(201).json({
                                          error:err.message
-                                     })
+                                     }) 
                                  }
                                  return res.status(400).json({
                                      sent:'Email has been sent, kindly follow the instrucations.',
