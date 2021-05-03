@@ -6,7 +6,6 @@ exports.add_book = (req,res,next)=>{
     const book = new Book({
         _id: new mongoose.Types.ObjectId(),
         title:req.body.title,
-        price:req.body.price,
         publishedDate:req.body.publishedDate,
         pageCount:req.body.pageCount,
         CreatedAt:req.body.CreatedAt,
@@ -48,15 +47,19 @@ exports.getBook=(req,res,next)=>{
                 const response={
                     _id:doc._id,
                     title:doc.title,
-                    price:doc.price,
+                    descriptioin:doc.descriptioin,
                     publishedDate:doc. publishedDate,
                     pageCount:doc.pageCount,
                     CreatedAt:doc.CreatedAt,
-                     author:doc.author,
+                    coverImageName:doc.coverImageName,
+                    pdfSrc:doc.pdfSrc,
+                    auther:doc.auther,
+                    Rate:doc.Rate,
                     type:doc.type,
                     bookPrice:doc.bookPrice,
                     isbn10:doc.isbn10,
-                    isbn13:doc.isbn13
+                    isbn13:doc.isbn13,
+                  
                    
                 }
                 res.status(200).json(response)
@@ -87,18 +90,21 @@ exports.getBookByType=(req,res,next)=>{
                 books: doc.map(
                    doc=>{
                       return{
-                          _id:doc._id,
-                          title:doc.title,
-                          price:doc.price,
-                          publishedDate:doc. publishedDate,
-                          pageCount:doc.pageCount,
-                          CreatedAt:doc.CreatedAt,
-                          coverImageName:doc.coverImageName,
-                          author:doc.author,
-                          type:doc.type,
-                          bookPrice:doc.bookPrice,
-                          isbn10:doc.isbn10,
-                          isbn13:doc.isbn13
+                        _id:doc._id,
+                        title:doc.title,
+                        descriptioin:doc.descriptioin,
+                        publishedDate:doc. publishedDate,
+                        pageCount:doc.pageCount,
+                        CreatedAt:doc.CreatedAt,
+                        coverImageName:doc.coverImageName,
+                        pdfSrc:doc.pdfSrc,
+                        auther:doc.auther,
+                        Rate:doc.Rate,
+                        type:doc.type,
+                        bookPrice:doc.bookPrice,
+                        isbn10:doc.isbn10,
+                        isbn13:doc.isbn13,
+                      
                         
                       }
 
@@ -114,32 +120,30 @@ exports.getAllBooks=(req,res,next)=>{
 
     Book.find().exec().then(
         doc=>{ 
-            const response ={
-                 count: doc.length,
-                 books: doc.map(
-                    doc=>{
-                       return{
-                           _id:doc._id,
-                           title:doc.title,
-                           price:doc.price,
-                           publishedDate:doc. publishedDate,
-                           pageCount:doc.pageCount,
-                           CreatedAt:doc.CreatedAt,
-                           coverImageName:doc.coverImageName,
-                           author:doc.author,
-                           type:doc.type,
-                           bookPrice:doc.bookPrice,
-                           isbn10:doc.isbn10,
-                           isbn13:doc.isbn13,
-                           request:{
-                               type:'GET',
-                           }
-                         
-                       }
- 
-                    } 
-                 )
-            };
+            const response
+            = doc.map(
+              doc=>{
+                 return{
+                     _id:doc._id,
+                     title:doc.title,
+                     descriptioin:doc.descriptioin,
+                     publishedDate:doc. publishedDate,
+                     pageCount:doc.pageCount,
+                     CreatedAt:doc.CreatedAt,
+                     coverImageName:doc.coverImageName,
+                     pdfSrc:doc.pdfSrc,
+                     auther:doc.auther,
+                     Rate:doc.Rate,
+                     type:doc.type,
+                     bookPrice:doc.bookPrice,
+                     isbn10:doc.isbn10,
+                     isbn13:doc.isbn13,
+                   
+                   
+                 }
+
+              } 
+           )
             console.log(doc);
              res.status(200).json(response);
             
