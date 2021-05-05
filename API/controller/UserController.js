@@ -36,8 +36,8 @@ exports.signIn= (req,res,next)=>{
                              email:req.body.email,
                              password:hash,
                              firstName:req.body.firstName,
-                             lastName:req.body.lastName,
-                             profileImage:req.file.path
+                             lastName:req.body.lastName
+                             //profileImage:req.file.path
                           });
                           userSignUp.save()
                           .then(result=>{
@@ -56,7 +56,7 @@ exports.signIn= (req,res,next)=>{
                              mg.messages().send(data, function (err, body) {
                                  if(err){
                                      return res.status(201).json({
-                                         error:err.message
+                                         error:err.message  
                                      }) 
                                  }
                                  return res.status(400).json({
@@ -71,7 +71,7 @@ exports.signIn= (req,res,next)=>{
                           .catch(result=>{
                              console.log(result);
                              res.status(500).json({
-                                 error:result,
+                                 error:result.message,
                                  message:'User did not created'
                              });
                           });
@@ -319,8 +319,7 @@ exports.sign= (req,res,next)=>{
                
 
              }else{
-               
-               
+            
                 const saltRounds = 10;
                  bcrypt.hash(req.body.password,saltRounds,(err,hash)=>{
                      if(err){
