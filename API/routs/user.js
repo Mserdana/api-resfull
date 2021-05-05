@@ -35,7 +35,7 @@ const uploadImg = multer({
    }}).single('profileImage');
 
 
-router.post('/signUp',uploadImg,userController.signIn);
+router.post('/signUp',userController.signIn);
 router.post('/login',userController.logIn);
 router.patch('/:userId',uploadImg,userController.updateById);
 router.delete('/:userId',userController.deleteUser);
