@@ -170,7 +170,6 @@ exports.logIn=(req,res,next)=>{
                         expiresIn:"24h"
                         
                     },
-
                     );
                     
                     const data = {
