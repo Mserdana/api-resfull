@@ -5,9 +5,10 @@
         "URL":"mongodb+srv://rest-api:",
         "DB_NAME":"myFirstDatabase",
         "USER_NAME":"rest-api",
-        "client_url":"http://localhost:2000",
+        "client_url":"https://mersal-api.herokuapp.com/",
         "reset_pass_key":"i am done :(",
-        "MAILGUN_KEY":"cca2a6eb48ddfb871255b82219e60bb7-a09d6718-4b3a9584"
-
+        "MAILGUN_KEY":"c0665982c2305342bddb84d7be6b9eb6-2a9a428a-c1696745",
+        
+        "ACTIVATE_ACCOUNT":"activateaccountpassword"
     }
 }

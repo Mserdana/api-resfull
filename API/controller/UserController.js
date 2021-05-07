@@ -3,13 +3,10 @@ const mongoose=require('mongoose');
 const bcrypt =require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mailgun = require("mailgun-js");
-const { json } = require("body-parser");
 const checkAuth = require("../middleweare/check-auth");
-const { restart } = require("nodemon");
-const DOMAIN = 'sandbox00cef12e337744b7895044628028d126.mailgun.org';
+const DOMAIN = 'sandbox0564028e1f694671b664d1f8a66170e6.mailgun.org';
 const mg = mailgun({apiKey: process.env.MAILGUN_KEY, domain: DOMAIN});
 const _ =require('lodash');
-const { has } = require("lodash");
 
 
 
@@ -24,61 +21,66 @@ exports.signIn= (req,res,next)=>{
                      message:"Email olrady exists"
                  });
              }else{
-                const saltRounds = 10;
-                 bcrypt.hash(req.body.password,saltRounds,(err,hash)=>{
-                     if(err){
-                         return res.status(500).json({
-                             failedSignUp:err.message
-                         });
-                     }else{
-                         const userSignUp = new User({
-                             _id: new mongoose.Types.ObjectId(),
-                             email:req.body.email,
-                             password:hash,
-                             firstName:req.body.firstName,
-                             lastName:req.body.lastName
-                             //profileImage:req.file.path
-                          });
-                          userSignUp.save()
-                          .then(result=>{
-                             console.log(result);
-                             //here
-                             const token = jwt.sign({_id:user._id},process.env.JWT_KEY,{expiresIn:'20m'});
-                             const data = {
-                                 from: 'mersalapplication@gmail.com',
-                                 to: req.body.email,
-                                 subject: 'Authentication Activated',
-                                 text: `
-                                  Please click on given link to activate  your account
-                                  ${process.env.client_url}/auth/${token}
-                                 `
-                             };
-                             mg.messages().send(data, function (err, body) {
-                                 if(err){
-                                     return res.status(201).json({
-                                         error:err.message  
-                                     }) 
-                                 }
-                                 return res.status(400).json({
-                                     sent:'Email has been sent, kindly follow the instrucations.',
-                                     message:'User created',
-
-                                     
-                                 });
-                             })
+     //here
+                        const token = jwt.sign({_id:user._id},process.env.ACTIVATE_ACCOUNT,{expiresIn:'20m'});
+                        const data = {
+                            from: 'mersalapplication@gmail.com',
+                            to:req.body.email,
+                            subject: 'Authenti cation Activated',
+                            text: `
+                            Please click on given link to activate  your account
+                            ${process.env.client_url}/auth/${token}
+                            `
+                        };
+                        mg.messages().send(data, function (err, body) {
+                            if(err){
+                                return res.status(400).json({
+                                    error:err.message , 
+                                   
+                                }) ;
+                            }
+                            const saltRounds = 10;
+                            bcrypt.hash(req.body.password,saltRounds,(err,hash)=>{
+                                if(err){
+                                    return res.status(500).json({
+                                        failedSignUp:err.message
+                                    });
+                                }else{
+                                    const userSignUp = new User({
+                                        _id: new mongoose.Types.ObjectId(),
+                                        email:req.body.email,
+                                        password:hash,
+                                        firstName:req.body.firstName,
+                                        lastName:req.body.lastName
+                                        //profileImage:req.file.path
+                                     });
+                                     userSignUp.save()
+                                     .then(
+                                   result=>{
+                                        console.log(result);
+                                        return res.status(200).json({
+                                            id:result._id,
+                                            sent:'Email has been sent, kindly follow the instrucations.',
+                                            message:'User created',
+            
+                                            
+                                        });
+                                       
+                                     })
+                                     .catch(result=>{
+                                        console.log(result);
+                                        res.status(500).json({
+                                            error:result.message,
+                                            message:'User did not created'
+                                        });
+                                     });
+                     
+                                }
+                    
+                            });
                             
-                          })
-                          .catch(result=>{
-                             console.log(result);
-                             res.status(500).json({
-                                 error:result.message,
-                                 message:'User did not created'
-                             });
-                          });
-          
-                     }
-         
-                 });
+                        });
+               
              }
  
          }
@@ -93,6 +95,50 @@ exports.signIn= (req,res,next)=>{
     });
  }
 
+ 
+exports.activateAccount=(req,res)=>{
+    const {token} = req.body;
+    if(token){
+            jwt.verify(token,process.env.ACTIVATE_ACCOUNT,function(error,decodeData){
+                if(error){
+                    return res.status(201).json({
+                        message:'Incorrect or experid link'
+                    });
+                }
+                const {email,password,firstName,lastName} = decodeData;
+                User.findOne({email}).exec()
+                .then(
+                    user=>{
+                        if(user){
+                            return res.status(409).json({
+                                message:"Email olrady exists"
+                            });
+                        }else{
+                            return res.status(400).json({
+                                message:'Signed up successfully'
+                            });
+                        }
+                    }
+                )
+                .catch(                                                                                                                                                                                                                                                                                                                                                                                 
+                    err=>{
+                        res.status(500).json({
+                            message:err.message
+                        });
+                    }
+                    
+                );
+
+            })
+    }else{
+        return res.status(500).json({
+            message:'Something went wrong!!'
+        });
+    } 
+   
+    
+
+}
 
 exports.logIn=(req,res,next)=>{
     User.find({email: req.body.email})
@@ -304,118 +350,6 @@ exports.forgetPasswoed=(req,res)=>{
         });
     })
 }
-
-
-exports.sign= (req,res,next)=>{
-  
-    User.find({email:req.body.email})
-    .exec()
-    .then(
-         user=>{
-             if(user.length>=1){
-                 return res.status(401).json({
-                     message:"Email olrady exists"
-                 });
-               
-
-             }else{
-            
-                const saltRounds = 10;
-                 bcrypt.hash(req.body.password,saltRounds,(err,hash)=>{
-                     if(err){
-                         return res.status(500).json({
-                             failedSignUp:err.message
-                         });
-                     }else if(hash){
-                           const token = jwt.sign({
-                            _id: new mongoose.Types.ObjectId(),
-                            email:req.body.email,
-                            password:hash,
-                            FullName:req.body.FullName,
-                            firstName:req.body.firstName,
-                            lastName:req.body.lastName,
-                            profileImage:req.file.path,
-                            phonenumper:req.body.phonenumper,
-                            location:req.body.location
-                           },process.env.JWT_KEY,
-                           {
-                               expiresIn:"24h"
-                               
-                           },);
-                           
-                    const data = {
-                        from: 'mersalapplication@gmail.com',
-                        to: req.body.email,
-                        subject: 'Hello',
-                        text: `
-                         Please click on given link to actived your account
-                         ${process.env.client_url}/auth/activate/${token}
-                        `
-                    };
-                    token.save().then(
-                        
-                    ).catch();
-                    mg.messages().send(data, function (err, body) {
-                        if(err){
-                            return res.status(201).json({
-                                error:err.message
-                            })
-                        }
-                        return res.status(400).json({
-                            message:'Email has been sent, kindly activate your email.',
-                            message: "Auth successful",
-                            token:token,
-                            
-                        });
-                    });
-
-                         
-          
-                     }else{
-                         return res.status(500).json({
-                            error:result.message,
-                            message:'User did not created'
-                        });
-                     }
-         
-                 });
-             }
- 
-         }
-    )
-    .catch(err=>{
-     console.log(err);
-     res.status(500).json({
-         error:err,
-         message:"did not sign up"
-     
-     });
-    });
- }
-/*
-exports.activateAccount=(req,res)=>{
-    User.findOne(req.body.email).exec((err,user)=>{
-        if(user){
-            return res.status(400).json({
-                message:'user with this email is alerady exists.'
-            }) 
-        }
-        const newUser =new User({}});
-        newUser.save((err,success)=>{
-            if(err){
-                return res.status(500).json({
-                    message:'Inavild or Expired link.'
-                })
-            }
-            return res.status(500).json({
-                message:'signed successfully.'
-            })
-        })
-    });
-    
-
-}
-*/
 
 exports.forgetpassword=(req,res,next)=>{
     const email = req.body.email;
