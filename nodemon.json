@@ -6,9 +6,10 @@
         "DB_NAME":"myFirstDatabase",
         "USER_NAME":"rest-api",
         "client_url":"https://mersal-api.herokuapp.com/",
+        "host_url":"https://localhost:2000",
         "reset_pass_key":"i am done :(",
         "MAILGUN_KEY":"c0665982c2305342bddb84d7be6b9eb6-2a9a428a-c1696745",
-        
+        "PORT":2000,
         "ACTIVATE_ACCOUNT":"activateaccountpassword"
     }
 }

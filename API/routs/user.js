@@ -42,6 +42,5 @@ router.delete('/:userId',userController.deleteUser);
 router.post('/forgetpassword',userController.forgetpassword);
 router.post('/resetPassword',userController.resetPassword);
 router.post('/activateAccount',userController.activateAccount);
-
-
+ 
  module.exports=router;
