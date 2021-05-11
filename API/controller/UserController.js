@@ -438,14 +438,3 @@ exports.resetPassword=(req,res)=>{
 
 }
 
-var smtanspost = nodemailer.createTransport({
-    host: 'mail.mywebsite.com',
-    serverce: 'Gmail',
-    port: 465,
-   secure: true,
-    auth:{
-        user : 'serdana2018@gmail.com ',
-        pass: 'maysaabouserdana0592648173',
-
-    }
-});
