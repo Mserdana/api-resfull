@@ -57,9 +57,10 @@ exports.signIn= (req,res,next)=>{
                                          error:err.message
                                      })
                                  }
-                                 return res.status(400).json({
+                                 return res.status(201).json({
                                      sent:'Email has been sent, kindly follow the instrucations.',
                                      message:'User created',
+                                     
 
                                      
                                  });
@@ -182,7 +183,7 @@ exports.logIn=(req,res,next)=>{
                                 error:err.message
                             })
                         }
-                        return res.status(400).json({
+                        return res.status(201).json({
                             message:'Email has been sent, kindly activate your email.',
                             message: "Auth successful",
                             token:token,
@@ -242,7 +243,7 @@ exports.deleteUser =(req,res,next)=>{
     User.remove({_id: req.params.userId})
     .exec()
     .then(result=>{
-        res.status(200).json({
+        res.status(201).json({
                 message: 'User delted'
         });
     })
@@ -401,7 +402,7 @@ exports.resetPassword=(req,res)=>{
         })
         User.findOne(user,(err,user)=>{
             if(err||!user){
-                return res.status(201).json({
+                return res.status(400).json({
                     error:err
                 })
             }
