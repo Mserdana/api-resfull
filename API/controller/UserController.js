@@ -53,7 +53,7 @@ exports.signIn= (req,res,next)=>{
                              };
                              mg.messages().send(data, function (err, body) {
                                  if(err){
-                                     return res.status(201).json({
+                                     return res.status(400).json({
                                          error:err.message
                                      })
                                  }
@@ -97,7 +97,7 @@ exports.activateAccount=(req,res)=>{
     if(token){
             jwt.verify(token,process.env.ACTIVATE_ACCOUNT,function(error,decodeData){
                 if(error){
-                    return res.status(201).json({
+                    return res.status(400).json({
                         message:'Incorrect or experid link'
                     });
                 }
@@ -110,7 +110,7 @@ exports.activateAccount=(req,res)=>{
                                 message:"Email olrady exists"
                             });
                         }else{
-                            return res.status(400).json({
+                            return res.status(201).json({
                                 message:'Signed up successfully'
                             });
                         }
