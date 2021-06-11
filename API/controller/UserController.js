@@ -182,13 +182,15 @@ exports.logIn=(req,res,next)=>{
                             return res.status(500).json({
                                 error:err.message
                             })
+                        }else{
+                            return res.status(201).json({
+                                message:'Email has been sent, kindly activate your email.',
+                                message: "Auth successful",
+                                token:token,
+                                id:  user[0]._id,
+                            });
                         }
-                        return res.status(201).json({
-                            message:'Email has been sent, kindly activate your email.',
-                            message: "Auth successful",
-                            token:token,
-                            id:  user[0]._id,
-                        });
+                        
                     });
                 }else{
                     res.status(401).json(
