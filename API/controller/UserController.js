@@ -179,7 +179,7 @@ exports.logIn=(req,res,next)=>{
                     };
                     mg.messages().send(data, function (err, body) {
                         if(err){
-                            return res.status(201).json({
+                            return res.status(500).json({
                                 error:err.message
                             })
                         }
@@ -240,7 +240,7 @@ exports.updateById=(req,res,next)=>{
 }
 
 exports.deleteUser =(req,res,next)=>{
-    User.remove({_id: req.params.userId})
+    User.remove({_id: req.params.userId})   
     .exec()
     .then(result=>{
         res.status(201).json({
@@ -284,7 +284,7 @@ exports.update = (req,res,next)=>{
              }).then(
                  result=>{
                   console.log(result);
-                  res.status(200).json({
+                  res.status(201).json({
                       message:'user Updated',
                       request:{
                           type:'PATCH',
@@ -310,7 +310,7 @@ exports.forgetPasswoed=(req,res)=>{
     const email = body.email;
     User.findOne({email},(err,user)=>{
         if(err  || !user){
-            return res.status(400).json({message:'user doesn\'t exists'})
+            return res.status(401).json({message:'user doesn\'t exists'})
         }
         const token= jwt.sign({
             email: user[0].email,
@@ -338,7 +338,7 @@ exports.forgetPasswoed=(req,res)=>{
         };
         return user.updateOne({resetLink:token},(err,success)=>{
             if(err ){
-                return res.status(400).json({message:'reset password link error'})
+                return res.status(500).json({message:'reset password link error'})
             }else{
                 
             }
@@ -350,7 +350,7 @@ exports.forgetpassword=(req,res,next)=>{
     const email = req.body.email;
      User.findOne({email},(err,user)=>{
         if(!user || err){
-            return res.status(400).json({message:'User dose not exists.'});
+            return res.status(401).json({message:'User dose not exists.'});
         }
         const token = jwt.sign({_id:user._id},process.env.reset_pass_key,{expiresIn:'20m'});
         const data = {
@@ -370,7 +370,7 @@ exports.forgetpassword=(req,res,next)=>{
             }else{
                 mg.messages().send(data, function (err, body) {
                     if(err){
-                        return res.status(400).json({
+                        return res.status(500).json({
                             error:err.message,
                             message:'Reset Password link error'
                         })
@@ -434,7 +434,7 @@ exports.resetPassword=(req,res)=>{
 
         })   
     }else{
-        return res.status(400).json({ message:'Authentication Error'});
+        return res.status(401).json({ message:'Authentication Error'});
     }
 
 }
