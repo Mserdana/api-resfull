@@ -394,47 +394,45 @@ exports.forgetpassword=(req,res,next)=>{
 exports.resetPassword=(req,res)=>{
     const {newPass, resetLink} = req.body;
     if(resetLink){
-       const user= jwt.verify(resetLink,process.env.reset_pass_key,function(err,decodeData){
+      jwt.verify(resetLink,process.env.reset_pass_key,function(err,decodeData){
             if(err){
                 return res.status(401).json({
                     error:err.message,
                     message:'Incoorect token or it is expired'
                 })
             }
-        })
-        User.findOne(user,(err,user)=>{
-            if(err||!user){
-                return res.status(400).json({
-                    error:err
-                })
-            }
-            bcrypt.hash(newPass,10,(err,hash)=>{
-                if(err){
-                    return res.status(500).json({
+            User.findOne({resetLink},(err,user)=>{
+                if(err||!user){
+                    return res.status(400).json({
                         error:err
                     })
-                }else{
-                    const obj = ({password:hash});
-                    user=_.extend(user,obj);
-                    user.save((err,result)=>{
-                        if(err){
-                            return res.status(400).json({
-                                error:err.message,
-                                
-                            })
-                        }else{
-                            return res.status(201).json({ message:'Your password has been changed'});
-        
-                        }
-        
-                    })
                 }
-
-            })
-           
-          
-
-        })   
+                bcrypt.hash(newPass,10,(err,hash)=>{
+                    if(err){
+                        return res.status(500).json({
+                            error:err
+                        })
+                    }else{
+                        const obj = ({password:hash});
+                        user=_.extend(user,obj);
+                        user.save((err,result)=>{
+                            if(err){
+                                return res.status(400).json({
+                                    error:err.message,
+                                    
+                                })
+                            }else{
+                                return res.status(201).json({ message:'Your password has been changed'});
+            
+                            }
+            
+                        })
+                    }
+    
+                })
+            }) 
+        })
+         
     }else{
         return res.status(401).json({ message:'Authentication Error'});
     }

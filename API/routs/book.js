@@ -83,11 +83,19 @@ router.get('/',bookController.getAllBooks);
 router.post('/',upload,checkAuth,bookController.add_book);
 
 router.get('/:bookId',bookController.getBook);
- 
+
+router.get('/isbn10/:isbn10',bookController.getBookByisbn10);
+
+router.get('/isbn13/:isbn13',bookController.getBookByisbn13);
+router.get('/type/:type',bookController.getBookByType);
+
+
 router.patch('/:BookId',checkAuth,bookController.updateBook);
    
 router.delete('/:BookId',checkAuth,bookController.deleteBook);
 
+
+ 
 /*
 router.post('/downloadPdf', (req,res)=>{
     const fileName = req.body.pdfSrc;

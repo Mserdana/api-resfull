@@ -80,10 +80,14 @@ exports.getBook=(req,res,next)=>{
    
 }
 //
-exports.getBookByType=(req,res,next)=>{
+
+ 
+
+exports.getBookByisbn10=(req,res,next)=>{
+     
     //// 
-    bookType = req.body.type;
-    Book.findById(bookType).exec().then(
+    var isbn10book = req.params.isbn10;
+    Book.find({isbn10:isbn10book}).exec().then(
         doc=>{
             const response ={
                 count: doc.length,
@@ -103,9 +107,7 @@ exports.getBookByType=(req,res,next)=>{
                         type:doc.type,
                         bookPrice:doc.bookPrice,
                         isbn10:doc.isbn10,
-                        isbn13:doc.isbn13,
-                      
-                        
+                        isbn13:doc.isbn13,                        
                       }
 
                    } 
@@ -114,8 +116,102 @@ exports.getBookByType=(req,res,next)=>{
            console.log(doc);
             res.status(200).json(response);
         }
-    ).catch();
+    ).catch( err=>{
+        console.log(err);
+        res.status(500).json({
+                 error:err.messag
+        })
+      });
 }
+
+
+
+exports.getBookByisbn13=(req,res,next)=>{
+     
+    //// 
+    var isbn13book = req.params.isbn13;
+    Book.find({isbn13:isbn13book}).exec().then(
+        doc=>{
+            const response ={
+                count: doc.length,
+                books: doc.map(
+                   doc=>{
+                      return{
+                        _id:doc._id,
+                        title:doc.title,
+                        descriptioin:doc.descriptioin,
+                        publishedDate:doc. publishedDate,
+                        pageCount:doc.pageCount,
+                        CreatedAt:doc.CreatedAt,
+                        coverImageName:doc.coverImageName,
+                        pdfSrc:doc.pdfSrc,
+                        auther:doc.auther,
+                        Rate:doc.Rate,
+                        type:doc.type,
+                        bookPrice:doc.bookPrice,
+                        isbn10:doc.isbn10,
+                        isbn13:doc.isbn13,                        
+                      }
+
+                   } 
+                )
+           };
+           console.log(doc);
+            res.status(200).json(response);
+        }
+    ).catch( err=>{
+        console.log(err);
+        res.status(500).json({
+                 error:err.messag
+        })
+      });
+}
+
+
+
+
+exports.getBookByType=(req,res,next)=>{
+     
+    //// 
+    var itypebook = req.params.type;
+    Book.find({type:itypebook}).exec().then(
+        doc=>{
+            const response ={
+                count: doc.length,
+                books: doc.map(
+                   doc=>{
+                      return{
+                        _id:doc._id,
+                        title:doc.title,
+                        descriptioin:doc.descriptioin,
+                        publishedDate:doc. publishedDate,
+                        pageCount:doc.pageCount,
+                        CreatedAt:doc.CreatedAt,
+                        coverImageName:doc.coverImageName,
+                        pdfSrc:doc.pdfSrc,
+                        auther:doc.auther,
+                        Rate:doc.Rate,
+                        type:doc.type,
+                        bookPrice:doc.bookPrice,
+                        isbn10:doc.isbn10,
+                        isbn13:doc.isbn13,                        
+                      }
+
+                   } 
+                )
+           };
+           console.log(doc);
+            res.status(200).json(response);
+        }
+    ).catch( err=>{
+        console.log(err);
+        res.status(500).json({
+                 error:err.messag
+        })
+      });
+}
+
+
 exports.getAllBooks=(req,res,next)=>{
 
     Book.find().exec().then(
@@ -151,7 +247,7 @@ exports.getAllBooks=(req,res,next)=>{
     ).catch(
         err=>{
             console.log(err);
-            res.status(404).json({
+            res.status(500).json({
                      error:err
             })
           });
