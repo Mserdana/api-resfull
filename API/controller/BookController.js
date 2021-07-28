@@ -23,6 +23,7 @@ exports.add_book = (req,res,next)=>{
         res.status(201).json({
             createedBook:{
                 messag:"craeted successfully",
+                id:book.id,
                 request:{
                     type:'Post',
 
