@@ -15,10 +15,13 @@ const deliveryRouter = require('./API/routs/delivery');
 
   
 const cors = require('cors');
-
     mongoose.connect(
     'mongodb+srv://rest-api:'+process.env.MONGO_ALTLAS_PW+'@mersal.5nqps.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{useMongoClient:true}
     );
+    mongoose.connection.on('error', function (err) {
+        console.log('MONGOOSE ERROR')
+        console.log(err)
+      })
 
 /*
 mongoose.connect(process.env.URL,{

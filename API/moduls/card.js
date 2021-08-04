@@ -1,13 +1,13 @@
 const  mongoose = require('mongoose');
 const cardSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    orders: {
+    orderId: {
         type: mongoose.Schema.Types.ObjectId, red:'Order',
-        required: false
+        required: true
     },
     userId:{
         type: mongoose.Schema.Types.ObjectId, red:'User',
-        required: false
+        required: true
     },
     modifiedOn: {
         type: Date,

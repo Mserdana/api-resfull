@@ -26,7 +26,6 @@ exports.add_book = (req,res,next)=>{
                 id:book.id,
                 request:{
                     type:'Post',
-
                     
                 }
             }
