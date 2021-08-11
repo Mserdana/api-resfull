@@ -6,7 +6,7 @@ const User = require("../moduls/user");
 
 exports.order_get_all =(req,res,next)=>{
     Order.find()
-    .select("book_key quantity _id  user address")
+    .select("book_key quantity _id  userId address")
     .populate('book_key')
     .exec()
     .then(
@@ -21,7 +21,7 @@ exports.order_get_all =(req,res,next)=>{
                          book_key:docs.book_key,
                          quantity:docs.quantity,
                          address:docs.address,
-                         user:docs.user,
+                         userId:docs.userId,
                          request:{
                              type:'GET',
 

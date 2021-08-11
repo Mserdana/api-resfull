@@ -11,6 +11,7 @@ const orderRouter = require('./API/routs/order');
 const cardRouter = require('./API/routs/card');
 const adminRouter = require('./API/routs/admin');
 const deliveryRouter = require('./API/routs/delivery');
+const Card = require("./API/moduls/card");
 
 
   
@@ -63,11 +64,14 @@ app.use('/orders',orderRouter);
 app.use('/cards',cardRouter);
 app.use('/admins',adminRouter);
 app.use('/delivery',deliveryRouter);
+
+
 //handel errores
-app.use((req,res,next)=>{
-    const reson = new Error('Not found');
-    reson.status = 404;
-    next(reson);
+app.use((error,req,res,next)=>{
+    
+    res.status(404).json({
+        message: error.message
+    });
 });
 
 
