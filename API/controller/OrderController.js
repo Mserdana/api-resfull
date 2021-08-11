@@ -73,10 +73,8 @@ exports.order_get_all =(req,res,next)=>{
                 console.log(result);
                 res.status(201).json({
                    message:'Order stored',
-                   createdOrder:{
-                       _id:result._id,
-                   } ,
-                   require:{
+                     _id:result._id,
+                      require:{
                        type:'POST',
 
                     }

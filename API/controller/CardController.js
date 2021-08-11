@@ -58,7 +58,7 @@ const Order = require("../moduls/order");
     .then(
         card=>{
         if(!card){
-         res.status(404).json({
+         res.status(400).json({
              message:'Cadr not founded'
             });
         }    
