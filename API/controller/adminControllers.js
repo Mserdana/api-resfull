@@ -7,8 +7,7 @@ const User = require("../moduls/user");
 
 
 exports.signUpAdmin= (req,res,next)=>{
-  
-    Admin.find({adminName:req.body.adminName})
+      Admin.find({adminName:req.body.adminName})
     .exec()
     .then(
          admin=>{
@@ -58,7 +57,7 @@ exports.signUpAdmin= (req,res,next)=>{
      res.status(500).json({
          error:err,
          message:"did not sign up"
-     
+
      });
     });
  }
@@ -88,9 +87,7 @@ exports.signUpAdmin= (req,res,next)=>{
                     },process.env.JWT_KEY,
                     {
                         expiresIn:"24h"
-
                     },
-
                     );
                     return res.status(201).json({
                         message: "Auth successful",

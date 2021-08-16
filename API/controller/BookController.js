@@ -2,10 +2,12 @@ const Book = require("../moduls/book");
 const mongoose=require('mongoose');
 
 
+
 exports.add_book = (req,res,next)=>{
     const book = new Book({
         _id: new mongoose.Types.ObjectId(),
         title:req.body.title,
+        price:req.body.price,
         publishedDate:req.body.publishedDate,
         pageCount:req.body.pageCount,
         CreatedAt:req.body.CreatedAt,
@@ -19,13 +21,14 @@ exports.add_book = (req,res,next)=>{
         isbn10:req.body.isbn10,
         isbn13:req.body.isbn13
     });
+
     book.save().then(
         res.status(201).json({
             createedBook:{
                 messag:"craeted successfully",
-                id:book.id,
                 request:{
                     type:'Post',
+
                     
                 }
             }
@@ -37,6 +40,7 @@ exports.add_book = (req,res,next)=>{
         }
     )
 }
+
 exports.getBook=(req,res,next)=>{
     const id = req.params.bookId;
     Book.findById(id).exec().then(

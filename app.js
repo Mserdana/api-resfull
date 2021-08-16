@@ -1,8 +1,7 @@
 const express = require('express');
 const app = express();
-
 const mongoose = require('mongoose');
-const bodyPorser =  require('body-parser');
+const bodyparser = require('body-parser');
 const morgan = require('morgan');
 
 const usersRouter = require('./API/routs/user');
@@ -11,10 +10,9 @@ const orderRouter = require('./API/routs/order');
 const cardRouter = require('./API/routs/card');
 const adminRouter = require('./API/routs/admin');
 const deliveryRouter = require('./API/routs/delivery');
-const Card = require("./API/moduls/card");
 
+const parseJson = bodyparser.json();
 
-  
 const cors = require('cors');
     mongoose.connect(
     'mongodb+srv://rest-api:'+process.env.MONGO_ALTLAS_PW+'@mersal.5nqps.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{useMongoClient:true}
@@ -35,12 +33,12 @@ mongoose.connect(process.env.URL,{
 
 })
 */
-app.use(bodyPorser.urlencoded({limit: '50mb', extended: true}));
-app.use(bodyPorser.json({limit:'5mb',extended:true}));
 
-app.use(cors());
-//app.use('/files' express.static("files"));
-app.use(morgan('dev'));
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyparser.json({limit: '10mb'}));
+
+  app.use(cors());
+ app.use(morgan('dev'));
  
 app.use('/bookcovers',express.static('./upload/images'));
 app.use('/userprofile',express.static('./upload/profileImages'));
@@ -57,6 +55,14 @@ app.use((res,req,next)=>{
     next();
 });
 
+app.use(function (req, res, next) {
+    req.getBody = function (callback) {
+        parseJson(req, res,function (err) {
+          callback(err, req.body);
+        });
+    };
+    next();
+}); 
 
 app.use('/users',usersRouter);
 app.use('/books',bookRouter);
@@ -64,26 +70,27 @@ app.use('/orders',orderRouter);
 app.use('/cards',cardRouter);
 app.use('/admins',adminRouter);
 app.use('/delivery',deliveryRouter);
-
-
-//handel errores
-app.use((error,req,res,next)=>{
-    
-    res.status(404).json({
-        message: error.message
-    });
+/*
+app.use((req,res,next)=>{
+    const reson = new Error('Not found');
+    reson.status = 404; 
+    next(reson);
 });
 
+*/
+app.use((err, req, res, next)=> {
+    if (err instanceof SyntaxError && err.status === 400) {
+        return res.status(400).send(JSON.stringify({
+            error: {
+                code: "INVALID_JSON",
+                message: "The body of your request is not valid JSON."
+            }
+        }))
+    }
 
-app.use((error,req,res,next)=>{
-    res.status(error.status || 500);
-    res.json({
-        result :{
-            app:'app.js',
-            message: error.message
-        }
-    });
-});
+    console.error(err);
+    res.status(500).send();
+  });
 
 
 module.exports = app;
